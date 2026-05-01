@@ -3,6 +3,75 @@
 <html>
   <head><title>Secure Chat</title></head>
 <body><h1>Secure Chat</h1></body>
+</html<!DOCTYPE html>
+<html lang="uz">
+  <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Secure Web Chat</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket_io/4.0.1/socket.io.js"></script>
+  </head>
+  <body>
+        <div class="chat-container">
+                  <header>
+                                <div class="status-dot"></div>div>
+                                <h1>Secure Chat <span class="protocol">SSL/TLS</span>span></h1>
+                  </header>
+
+                  <div class="messages-area" id="messages">
+                                <div class="system-msg">Xavfsiz chatga xush kelibsiz</div>div>
+                  </div>div>
+
+                  <div class="input-area">
+                                <input type="text" id="message_input" placeholder="Xabar yozing..." autocomplete="off">
+                                <button id="send_button">
+                                                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                                                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>path>
+                                                  </svg>svg>
+                                </button>button>
+                  </div>div>
+        </div>div>
+
+        <script>
+                  const socket = io();
+                  const messagesArea = document.getElementById('messages');
+                  const messageInput = document.getElementById('message_input');
+                  const sendButton = document.getElementById('send_button');
+
+                  function addMessage(data, isOwn) {
+                                const div = document.createElement('div');
+                                div.className = `message ${isOwn ? 'own' : 'other'}`;
+                                div.textContent = data.msg;
+                                messagesArea.appendChild(div);
+                                messagesArea.scrollTop = messagesArea.scrollHeight;
+                  }
+
+                  sendButton.onclick = () => {
+                                const msg = messageInput.value;
+                                if (msg) {
+                                                  socket.emit('chat_message', msg);
+                                                  messageInput.value = '';
+                                }
+                  };
+
+                  messageInput.onkeypress = (e) => {
+                                if (e.key === 'Enter') sendButton.click();
+                  };
+
+                  socket.on('chat_message', (data) => {
+                                const isOwn = data.sender_id === socket.id;
+                                addMessage(data, isOwn);
+                  });
+
+                  socket.on('connect', () => {
+                                console.log('Serverga ulandi!');
+                  });
+        </script>
+  </body>
 </html>
+
+        </script>
+                  </header>
 </h1></body></title></head>
 </html>
